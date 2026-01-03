@@ -1,0 +1,33 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(.mvnw.cmd test -Dtest=WeatherServiceTest)",
+      "Bash(./mvnw test -Dtest=WeatherServiceTest)",
+      "Bash(./mvnw clean test)",
+      "Bash(curl \"http://localhost:8080/api/weather/current?location=深圳\")",
+      "Bash(curl \"http://localhost:8080/api/weather/current?location=shenzhen\")",
+      "Bash(./mvnw clean package)",
+      "Bash(./mvnw clean package -DskipTests)",
+      "Bash(mvn clean package)",
+      "Bash(node test-mcp-server.js)",
+      "Bash(netstat -ano)",
+      "Bash(findstr :8080)",
+      "Bash(tasklist)",
+      "Bash(findstr 23988)",
+      "Bash(mvn clean package -DskipTests)",
+      "Bash(java -jar targetoriginmcp-0.0.1-SNAPSHOT.jar)",
+      "Bash(java -jar \"target\\\\originmcp-0.0.1-SNAPSHOT.jar\")",
+      "Bash(mvn dependency:tree -Dincludes=org.springframework.ai:*)",
+      "Bash(findstr \"spring-ai\")",
+      "Bash(jar -tf \"%USERPROFILE%\\\\.m2\\\\repository\\\\org\\\\springframework\\\\ai\\\\spring-ai-mcp-annotations\\\\1.1.2\\\\spring-ai-mcp-annotations-1.1.2.jar\")",
+      "Bash(findstr \"McpTool\")",
+      "Bash(powershell -Command \"Add-Type -AssemblyName System.IO.Compression.FileSystem; [System.IO.Compression.ZipFile]::OpenRead\\(''C:\\\\Users\\\\jaled\\\\.m2\\\\repository\\\\org\\\\springframework\\\\ai\\\\spring-ai-mcp-annotations\\\\1.1.2\\\\spring-ai-mcp-annotations-1.1.2.jar''\\).Entries | Where-Object { $_Name -like ''*Tool*'' } | Select-Object -ExpandProperty FullName\")",
+      "Bash(mvn compile)",
+      "Bash(mvn package -DskipTests)",
+      "Bash(taskkill /F /FI \"IMAGENAME eq java.exe\" /FI \"COMMANDLINE eq *originmcp*\")",
+      "Bash(powershell -Command \"Get-Process | Where-Object {$_Path -like ''*java*''} | Select-Object Id, ProcessName, Path\")",
+      "Bash(cmd /c \"del /F target\\\\originmcp-0.0.1-SNAPSHOT.jar.bak 2>nul & ren target\\\\originmcp-0.0.1-SNAPSHOT.jar originmcp-0.0.1-SNAPSHOT.jar.bak\")",
+      "Bash(wmic process where \"commandline like ''%originmcp%'' and name=''java.exe''\" get processid,commandline)"
+    ]
+  }
+}

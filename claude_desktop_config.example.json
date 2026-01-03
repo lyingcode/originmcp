@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "weather": {
+      "command": "java",
+      "args": [
+        "-jar",
+        "D:/projects/originmcp/target/originmcp-0.0.1-SNAPSHOT.jar"
+      ],
+      "env": {}
+    }
+  }
+}
