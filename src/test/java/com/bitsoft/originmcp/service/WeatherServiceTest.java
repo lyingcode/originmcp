@@ -64,7 +64,7 @@ class WeatherServiceTest {
         when(responseSpec.body(String.class)).thenReturn(mockResponse);
 
         // Act
-        String result = weatherService.getWeather("shenzhen");
+        String result = weatherService.fetchWeatherData("shenzhen");
 
         // Assert
         assertNotNull(result);
@@ -94,7 +94,7 @@ class WeatherServiceTest {
         when(responseSpec.body(String.class)).thenReturn(mockResponse);
 
         // Act
-        String result = weatherService.getWeather("22.5431,114.0579");
+        String result = weatherService.fetchWeatherData("22.5431,114.0579");
 
         // Assert
         assertNotNull(result);
@@ -109,7 +109,7 @@ class WeatherServiceTest {
                 .thenThrow(new RuntimeException("API connection failed"));
 
         // Act
-        String result = weatherService.getWeather("beijing");
+        String result = weatherService.fetchWeatherData("beijing");
 
         // Assert
         assertNotNull(result);
@@ -162,16 +162,16 @@ class WeatherServiceTest {
     @Test
     void testGetCityCoordinates_KnownCities() {
         // Test that known cities work
-        assertDoesNotThrow(() -> weatherService.getWeather("beijing"));
-        assertDoesNotThrow(() -> weatherService.getWeather("shanghai"));
-        assertDoesNotThrow(() -> weatherService.getWeather("shenzhen"));
-        assertDoesNotThrow(() -> weatherService.getWeather("guangzhou"));
+        assertDoesNotThrow(() -> weatherService.fetchWeatherData("beijing"));
+        assertDoesNotThrow(() -> weatherService.fetchWeatherData("shanghai"));
+        assertDoesNotThrow(() -> weatherService.fetchWeatherData("shenzhen"));
+        assertDoesNotThrow(() -> weatherService.fetchWeatherData("guangzhou"));
     }
 
     @Test
     void testGetCityCoordinates_UnknownCity() {
         // Act & Assert - should throw exception for unknown city
-        String result = weatherService.getWeather("unknowncity");
+        String result = weatherService.fetchWeatherData("unknowncity");
 
         // Assert - should return error message about unknown city
         assertTrue(result.contains("Error retrieving weather:") &&
@@ -195,7 +195,7 @@ class WeatherServiceTest {
         when(responseSpec.body(String.class)).thenReturn(mockResponse);
 
         // Act
-        String result = weatherService.getWeather("深圳");
+        String result = weatherService.fetchWeatherData("深圳");
 
         // Assert
         assertNotNull(result);
@@ -217,10 +217,10 @@ class WeatherServiceTest {
                 .thenReturn(mockResponseClear)
                 .thenReturn(mockResponseRain);
 
-        String resultClear = weatherService.getWeather("beijing");
+        String resultClear = weatherService.fetchWeatherData("beijing");
         assertTrue(resultClear.contains("Clear sky"));
 
-        String resultRain = weatherService.getWeather("beijing");
+        String resultRain = weatherService.fetchWeatherData("beijing");
         assertTrue(resultRain.contains("Rain"));
     }
 }

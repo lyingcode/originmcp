@@ -15,7 +15,7 @@ public class WeatherController {
 
     @GetMapping("/current")
     public String getCurrentWeather(@RequestParam String location) {
-        return weatherService.getWeather(location);
+        return weatherService.fetchWeatherData(location);
     }
 
     @GetMapping("/forecast")

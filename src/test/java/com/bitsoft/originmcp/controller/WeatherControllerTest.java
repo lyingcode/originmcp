@@ -26,7 +26,7 @@ class WeatherControllerTest {
     void testGetCurrentWeather_Success() throws Exception {
         String expectedResponse = "Current Weather for shenzhen:\n\nTemperature: 15.0°C\nHumidity: 52%\n";
 
-        when(weatherService.getWeather(anyString()))
+        when(weatherService.fetchWeatherData(anyString()))
                 .thenReturn(expectedResponse);
 
         mockMvc.perform(get("/api/weather/current")
@@ -71,7 +71,7 @@ class WeatherControllerTest {
     void testGetCurrentWeather_ErrorHandling() throws Exception {
         String errorResponse = "Error retrieving weather: API connection failed";
 
-        when(weatherService.getWeather("invalidcity"))
+        when(weatherService.fetchWeatherData("invalidcity"))
                 .thenReturn(errorResponse);
 
         mockMvc.perform(get("/api/weather/current")
