@@ -1,9 +1,13 @@
 -- Calculator Service Tools Registration
 -- This script registers CalculatorService methods as MCP tools
 
--- Clean up existing data
-DELETE FROM mcp_tool_parameter WHERE tool_id IN (SELECT id FROM mcp_tool_definition WHERE service_bean_name = 'calculatorService');
-DELETE FROM mcp_tool_definition WHERE service_bean_name = 'calculatorService';
+-- Clean up existing data (including weatherService tools that were removed)
+DELETE FROM mcp_tool_parameter WHERE tool_id IN (
+    SELECT id FROM mcp_tool_definition WHERE service_bean_name = 'calculatorService'
+    OR service_bean_name = 'weatherService'
+);
+DELETE FROM mcp_tool_definition WHERE service_bean_name = 'calculatorService'
+   OR service_bean_name = 'weatherService';
 
 -- Insert tool definitions
 INSERT INTO mcp_tool_definition (tool_name, description, service_bean_name, method_name, return_type, enabled, priority)
