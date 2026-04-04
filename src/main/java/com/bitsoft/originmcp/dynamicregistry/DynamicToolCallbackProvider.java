@@ -4,11 +4,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ai.tool.ToolCallback;
 import org.springframework.ai.tool.ToolCallbackProvider;
+import org.springframework.ai.tool.definition.DefaultToolDefinition;
 import org.springframework.ai.tool.definition.ToolDefinition;
-import org.springframework.ai.tool.definition.ToolDefinitionBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
 import java.util.ArrayList;
@@ -69,12 +70,23 @@ public class DynamicToolCallbackProvider implements ToolCallbackProvider {
     }
 
     private ToolCallback createToolCallback(DynamicToolDef toolDef) {
-        // Create tool definition
-        ToolDefinition toolDefinition = ToolDefinitionBuilder.builder()
+        // Create tool definition - inputSchema needs to be a JSON string
+        String inputSchemaJson;
+        try {
+            inputSchemaJson = objectMapper.writeValueAsString(toolDef.getInputSchema());
+        } catch (JsonProcessingException e) {
+            log.error("Failed to serialize input schema for tool '{}': {}", toolDef.getName(), e.getMessage());
+            inputSchemaJson = "{\"type\":\"object\"}";
+        }
+
+        ToolDefinition toolDefinition = DefaultToolDefinition.builder()
             .name(toolDef.getName())
             .description(toolDef.getDescription())
-            .inputSchema(toolDef.getInputSchema())
+            .inputSchema(inputSchemaJson)
             .build();
+
+        final DynamicToolDef finalToolDef = toolDef;
+        final ToolInvoker finalToolInvoker = toolInvoker;
 
         // Create a custom callback that uses ToolInvoker
         return new ToolCallback() {
@@ -84,25 +96,28 @@ public class DynamicToolCallbackProvider implements ToolCallbackProvider {
             }
 
             @Override
-            @SuppressWarnings("unchecked")
-            public Object call(Object... arguments) {
+            public String call(String input) {
                 try {
-                    // Build argument map from the arguments array
-                    Map<String, Object> argMap = new java.util.LinkedHashMap<>();
-                    var params = toolDef.getParameters();
-                    for (int i = 0; i < arguments.length && i < params.size(); i++) {
-                        argMap.put(params.get(i).getName(), arguments[i]);
-                    }
+                    // Parse the JSON input into a Map
+                    @SuppressWarnings("unchecked")
+                    Map<String, Object> argMap = objectMapper.readValue(input, Map.class);
 
-                    return toolInvoker.invoke(
-                        toolDef.getServiceBean(),
-                        toolDef.getMethod().getName(),
+                    // Invoke the tool
+                    Object result = finalToolInvoker.invoke(
+                        finalToolDef.getServiceBean(),
+                        finalToolDef.getMethod().getName(),
                         argMap,
-                        params
+                        finalToolDef.getParameters()
                     );
+
+                    // Return the result as JSON string
+                    return objectMapper.writeValueAsString(result);
+                } catch (JsonProcessingException e) {
+                    log.error("Failed to parse input JSON for tool '{}': {}", finalToolDef.getName(), e.getMessage());
+                    return "{\"error\": \"Invalid JSON input: " + e.getMessage() + "\"}";
                 } catch (Exception e) {
-                    log.error("Tool invocation failed for '{}': {}", toolDef.getName(), e.getMessage());
-                    throw new RuntimeException("Tool invocation failed: " + e.getMessage(), e);
+                    log.error("Tool invocation failed for '{}': {}", finalToolDef.getName(), e.getMessage());
+                    return "{\"error\": \"" + e.getMessage() + "\"}";
                 }
             }
         };
