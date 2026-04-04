@@ -56,6 +56,18 @@
 			<artifactId>spring-boot-starter</artifactId>
 		</dependency>
 
+		<!-- Spring Boot Starter Web - HTTP transport for MCP -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+		<!-- Spring Boot AOP for security interceptors -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-aop</artifactId>
+		</dependency>
+
 		<!-- Spring Boot Starter JDBC (required for MyBatis DataSource) -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -75,22 +87,10 @@
 			<artifactId>spring-ai-starter-mcp-server</artifactId>
 		</dependency>
 
-		<!-- Web client for API calls -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
-
 		<!-- MySQL connector -->
 		<dependency>
 			<groupId>com.mysql</groupId>
 			<artifactId>mysql-connector-j</artifactId>
-		</dependency>
-
-		<!-- Spring AI MCP Client Starter -->
-		<dependency>
-			<groupId>org.springframework.ai</groupId>
-			<artifactId>spring-ai-starter-mcp-client</artifactId>
 		</dependency>
 
 		<!-- Test dependencies -->

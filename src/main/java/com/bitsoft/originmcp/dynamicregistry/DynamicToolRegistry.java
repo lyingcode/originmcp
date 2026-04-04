@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
  * and dynamically registers them with Spring AI's tool infrastructure.
  *
  * Supports periodic refresh to pick up database changes without restart.
+ * Wraps service beans with security proxies for authorization checks.
  */
 @Service
 public class DynamicToolRegistry {
@@ -38,6 +39,9 @@ public class DynamicToolRegistry {
 
     @Autowired
     private ApplicationContext applicationContext;
+
+    @Autowired
+    private ToolSecurityInterceptor securityInterceptor;
 
     // Runtime registry of active tools: toolName -> DynamicToolDef
     private final Map<String, DynamicToolDef> registeredTools = new ConcurrentHashMap<>();
@@ -129,12 +133,13 @@ public class DynamicToolRegistry {
 
     /**
      * Builds a DynamicToolDef from a database record.
+     * Wraps the service bean with a security proxy for authorization and validation.
      */
     private DynamicToolDef buildToolDefinition(McpToolDefinition dbTool) {
         String beanName = dbTool.getServiceBeanName();
         Object serviceBean = applicationContext.getBean(beanName);
 
-        // Load parameters for this tool
+        // Load parameters for this tool FIRST (needed for registration)
         List<McpToolParameter> dbParams = toolParameterMapper.findByToolId(dbTool.getId());
 
         // Convert to ParameterDefinition
@@ -148,8 +153,15 @@ public class DynamicToolRegistry {
             ))
             .collect(Collectors.toList());
 
+        // Wrap with security proxy if security is enabled (skip for calculatorService demo)
+        Object wrappedBean = "calculatorService".equals(beanName) ? serviceBean
+            : securityInterceptor.wrapIfNeeded(serviceBean, beanName, dbTool.getToolName());
+
+        // Register the method -> tool name mapping for authorization and validation
+        securityInterceptor.registerToolMethod(dbTool.getMethodName(), dbTool.getToolName(), parameters);
+
         // Find the method on the service bean
-        Method method = findMethod(serviceBean, dbTool.getMethodName(), parameters);
+        Method method = findMethod(wrappedBean, dbTool.getMethodName(), parameters);
         if (method == null) {
             log.warn("Method '{}' not found on bean '{}' or parameter count mismatch",
                 dbTool.getMethodName(), beanName);
@@ -162,7 +174,7 @@ public class DynamicToolRegistry {
         return new DynamicToolDef(
             dbTool.getToolName(),
             dbTool.getDescription(),
-            serviceBean,
+            wrappedBean,  // Use the wrapped bean
             method,
             parameters
         );
