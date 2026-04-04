@@ -31,11 +31,18 @@ public class McpHandler {
     private static final int METHOD_NOT_FOUND = -32601;
     private static final int TOOL_ERROR = -32000;
 
-    @Autowired
     private DynamicToolRegistry toolRegistry;
 
-    @Autowired
     private ObjectMapper objectMapper;
+
+    public McpHandler() {
+        // Default constructor for Spring
+    }
+
+    public McpHandler(ObjectMapper objectMapper, DynamicToolRegistry toolRegistry) {
+        this.objectMapper = objectMapper;
+        this.toolRegistry = toolRegistry;
+    }
 
     /**
      * Handle POST requests with JSON-RPC 2.0 request body.
@@ -203,7 +210,7 @@ public class McpHandler {
     /**
      * Map Java type to JSON Schema type.
      */
-    private String mapJavaTypeToJsonSchemaType(String javaType) {
+    String mapJavaTypeToJsonSchemaType(String javaType) {
         if (javaType == null) return "string";
         String type = javaType.toLowerCase();
         if (type.contains("string")) return "string";
@@ -266,7 +273,7 @@ public class McpHandler {
     /**
      * Build JSON-RPC success response.
      */
-    private String buildSuccessResponse(Object id, Object result) {
+    String buildSuccessResponse(Object id, Object result) {
         try {
             return objectMapper.writeValueAsString(Map.of(
                 "jsonrpc", JSONRPC_VERSION,
@@ -282,7 +289,7 @@ public class McpHandler {
     /**
      * Build JSON-RPC error response.
      */
-    private String buildErrorResponse(Object id, int code, String message) {
+    String buildErrorResponse(Object id, int code, String message) {
         try {
             return objectMapper.writeValueAsString(Map.of(
                 "jsonrpc", JSONRPC_VERSION,
@@ -299,7 +306,7 @@ public class McpHandler {
     /**
      * Simple JSON escaping for error messages.
      */
-    private String escapeJson(String s) {
+    String escapeJson(String s) {
         if (s == null) return "";
         return s.replace("\\", "\\\\")
                 .replace("\"", "\\\"")
