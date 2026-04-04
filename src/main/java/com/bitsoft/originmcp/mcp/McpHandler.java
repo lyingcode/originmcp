@@ -35,10 +35,7 @@ public class McpHandler {
 
     private ObjectMapper objectMapper;
 
-    public McpHandler() {
-        // Default constructor for Spring
-    }
-
+    @Autowired
     public McpHandler(ObjectMapper objectMapper, DynamicToolRegistry toolRegistry) {
         this.objectMapper = objectMapper;
         this.toolRegistry = toolRegistry;
