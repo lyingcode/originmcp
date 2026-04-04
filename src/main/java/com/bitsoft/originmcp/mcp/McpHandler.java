@@ -7,11 +7,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.buffer.DataBuffer;
+import org.springframework.core.io.buffer.DataBufferFactory;
+import org.springframework.core.io.buffer.DefaultDataBufferFactory;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
+import org.springframework.web.reactive.function.BodyInserters;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -34,6 +41,8 @@ public class McpHandler {
     private DynamicToolRegistry toolRegistry;
 
     private ObjectMapper objectMapper;
+
+    private static final DataBufferFactory BUFFER_FACTORY = new DefaultDataBufferFactory();
 
     @Autowired
     public McpHandler(ObjectMapper objectMapper, DynamicToolRegistry toolRegistry) {
@@ -63,6 +72,24 @@ public class McpHandler {
             .header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
             .header("Access-Control-Allow-Headers", "Content-Type, X-API-Key")
             .build();
+    }
+
+    /**
+     * Handle SSE endpoint for Roo Code / clients that require SSE transport.
+     * Returns a stream of JSON-RPC responses via Server-Sent Events.
+     */
+    public Mono<ServerResponse> handleSse(ServerRequest request) {
+        // Return endpoint info in a format that HTTP clients expect
+        // Line-based format: "url: <actual-post-url>"
+        String sseData = "data: {\"protocol\":\"http\",\"postUrl\":\"/origin/mcp\",\"message\":\"MCP server ready for Roo Code\"}\n\n";
+
+        return ServerResponse.ok()
+            .contentType(MediaType.TEXT_EVENT_STREAM)
+            .header("Access-Control-Allow-Origin", "*")
+            .header("Cache-Control", "no-cache")
+            .body(BodyInserters.fromDataBuffers(Flux.just(
+                BUFFER_FACTORY.wrap(sseData.getBytes(StandardCharsets.UTF_8))
+            )));
     }
 
     /**

@@ -1,3 +1,9 @@
 {
-  "mcpServers": {}
+  "mcpServers": {
+    "originmcp": {
+      "transport": "http",
+      "url": "http://localhost:8080/origin/mcp",
+      "description": "OriginMCP Server - 本地MCP服务器"
+    }
+  }
 }

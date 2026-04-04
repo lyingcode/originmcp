@@ -31,10 +31,17 @@ public class McpRouterConfig {
     @Bean
     public RouterFunction<ServerResponse> mcpRouterFunction() {
         return RouterFunctions.route()
-            // POST /origin/mcp - handle JSON-RPC requests
+            // POST /origin/mcp - handle JSON-RPC requests (any content type for compatibility)
             .POST("/origin/mcp",
                 RequestPredicates.contentType(MediaType.APPLICATION_JSON),
                 mcpHandler::handleJsonRpc)
+            // POST /origin/mcp fallback - handle JSON-RPC with any content type
+            .POST("/origin/mcp",
+                RequestPredicates.accept(MediaType.APPLICATION_JSON),
+                mcpHandler::handleJsonRpc)
+            // GET /origin/mcp - SSE endpoint for Roo Code
+            .GET("/origin/mcp",
+                mcpHandler::handleSse)
             // OPTIONS /origin/mcp - handle CORS preflight
             .OPTIONS("/origin/mcp",
                 mcpHandler::handleOptions)

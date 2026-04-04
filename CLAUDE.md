@@ -16,3 +16,4 @@ Use `@/openspec/AGENTS.md` to learn:
 Keep this managed block so 'openspec update' can refresh the instructions.
 
 <!-- OPENSPEC:END -->
+### mcp要求使用http stateless连接，不要改成stdio,当前应用要求在服务器上部署，不是给本地使用
