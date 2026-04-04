@@ -27,7 +27,8 @@
       "Bash(taskkill /F /FI \"IMAGENAME eq java.exe\" /FI \"COMMANDLINE eq *originmcp*\")",
       "Bash(powershell -Command \"Get-Process | Where-Object {$_Path -like ''*java*''} | Select-Object Id, ProcessName, Path\")",
       "Bash(cmd /c \"del /F target\\\\originmcp-0.0.1-SNAPSHOT.jar.bak 2>nul & ren target\\\\originmcp-0.0.1-SNAPSHOT.jar originmcp-0.0.1-SNAPSHOT.jar.bak\")",
-      "Bash(wmic process where \"commandline like ''%originmcp%'' and name=''java.exe''\" get processid,commandline)"
+      "Bash(wmic process where \"commandline like ''%originmcp%'' and name=''java.exe''\" get processid,commandline)",
+      "Bash(mvn test:*)"
     ]
   }
 }

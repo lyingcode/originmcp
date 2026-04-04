@@ -33,6 +33,7 @@
 **支持的城市**:
 - 中文: 北京、上海、深圳、广州
 - 英文: beijing, shanghai, shenzhen, guangzhou, new york, london, tokyo, paris, los angeles
+- 我现在修改一下描述信息
 
 **坐标格式**: `纬度,经度` (例如: `39.9042,116.4074`)
 
