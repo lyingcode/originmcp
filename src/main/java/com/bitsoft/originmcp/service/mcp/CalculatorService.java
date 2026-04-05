@@ -1,10 +1,10 @@
-package com.bitsoft.originmcp.service;
+package com.bitsoft.originmcp.service.mcp;
 
 import org.springframework.stereotype.Service;
 
 /**
- * Simple calculator service for demonstration purposes.
- * These methods can be registered as MCP tools.
+ * Calculator service for MCP tool demonstration.
+ * These methods are registered as MCP tools via data.sql.
  */
 @Service
 public class CalculatorService {

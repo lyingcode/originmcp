@@ -69,7 +69,8 @@
       "Bash(MCP_DB_PASSWORD='zyfan1314@' mvn spring-boot:run)",
       "Bash(findstr LISTENING)",
       "Bash(taskkill:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(npx -y @context7/mcp-cli \"spring ai mcp server configuration\")"
     ]
   }
 }
