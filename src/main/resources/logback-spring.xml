@@ -18,6 +18,10 @@
     <logger name="org.apache" level="WARN"/>
     <logger name="com.zaxxer.hikari" level="WARN"/>
 
+    <!-- Enable Spring AI and MCP logging -->
+    <logger name="org.springframework.ai" level="INFO"/>
+    <logger name="io.modelcontextprotocol" level="INFO"/>
+
     <!-- Keep our application logs at INFO -->
     <logger name="com.bitsoft.originmcp" level="INFO"/>
 </configuration>

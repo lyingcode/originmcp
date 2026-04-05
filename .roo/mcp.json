@@ -1,12 +1,13 @@
-{
-  "mcpServers": {
-    "originmcp": {
-      "transport": "http",
-      "url": "http://localhost:8080/origin/mcp",
-      "description": "OriginMCP - Roo Code HTTP Server",
-      "headers": {
-        "Content-Type": "application/json"
+  {                                                                     
+    "mcpServers": {                                            
+      "originmcp": {
+        "transport": "http",
+        "url": "http://localhost:8080/origin/mcp",
+        "description": "OriginMCP - Stateless HTTP Server",
+        "headers": {
+          "Content-Type": "application/json",
+          "X-API-Key": "test-api-key"
+        }
       }
     }
   }
-}

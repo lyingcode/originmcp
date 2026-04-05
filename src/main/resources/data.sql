@@ -59,7 +59,7 @@ SELECT id, 'text', 'java.lang.String', 0, 'Text to echo', TRUE, NULL FROM mcp_to
 -- API Key for testing (if mcp_api_keys table exists)
 -- API key hash is SHA-256 of "test-api-key" with prefix "mcp-salt:"
 INSERT IGNORE INTO mcp_api_keys (client_id, api_key, api_key_hash, client_name, enabled, rate_limit, rate_limit_enabled)
-VALUES ('test-client', 'test-api-key', 'L3I+05v+5zKpVrY5QJ+M8g==', 'Test Client', TRUE, 60, TRUE);
+VALUES ('test-client', 'test-api-key', 'fRQVUnxwmUaLULgUm7AOnzxdko0klhe+LHW3DwnkFG0=', 'Test Client', TRUE, 60, TRUE);
 
 -- Give test-client permission to use calculator tools
 INSERT IGNORE INTO mcp_client_permissions (client_id, tool_name)
